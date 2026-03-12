@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome to MacroPulse</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg: #070b14; --border: #1e2d45; --green: #00d97e; --green-dim: #00d97e22; --text: #e2e8f0; --muted: #64748b; --card: #0f1929; }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; }
+    .box { background: var(--card); border: 1px solid var(--green); border-radius: 16px; padding: 3rem 2.5rem; max-width: 560px; width: 100%; text-align: center; }
+    .icon { font-size: 3rem; margin-bottom: 1.5rem; }
+    h1 { font-size: 1.8rem; margin-bottom: 0.75rem; }
+    p { color: var(--muted); margin-bottom: 1.5rem; font-size: 0.95rem; }
+    .steps { text-align: left; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; margin: 1.5rem 0; }
+    .step { display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1.2rem; }
+    .step:last-child { margin-bottom: 0; }
+    .step-num { width: 24px; height: 24px; background: var(--green-dim); border: 1px solid var(--green); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; color: var(--green); flex-shrink: 0; margin-top: 2px; }
+    .step-text h4 { font-size: 0.9rem; margin-bottom: 0.2rem; }
+    .step-text p { color: var(--muted); font-size: 0.82rem; margin: 0; }
+    code { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; background: var(--bg); padding: 0.15rem 0.4rem; border-radius: 4px; color: var(--green); }
+    .btn { display: inline-block; background: var(--green); color: #000; padding: 0.8rem 2rem; border-radius: 8px; font-weight: 600; font-size: 0.9rem; text-decoration: none; margin: 0.5rem; }
+    .btn:hover { opacity: 0.88; }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+    .btn-outline:hover { border-color: var(--muted); }
+    .nav-logo { font-weight: 700; font-size: 1.1rem; margin-bottom: 2rem; color: var(--text); } .nav-logo span { color: var(--green); }
+  </style>
+</head>
+<body>
+  <div class="nav-logo">Macro<span>Pulse</span></div>
+  <div class="box">
+    <div class="icon">✓</div>
+    <h1>You're all set.</h1>
+    <p>Your subscription is active. Check your email for your API key and onboarding instructions.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text">
+          <h4>Find your API key in your inbox</h4>
+          <p>We sent your key to the email used at checkout. Add it to your requests as <code>X-MacroPulse-Key</code>.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text">
+          <h4>Make your first request</h4>
+          <p><code>GET https://api.macropulse.live/v1/signals/latest</code></p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text">
+          <h4>Explore the demo notebook</h4>
+          <p>Download our Jupyter notebook showing a full regime-filtered strategy backtest.</p>
+        </div>
+      </div>
+    </div>
+
+    <a href="https://macropulse.live/dashboard" class="btn">View Live Dashboard</a>
+    <a href="https://api.macropulse.live/docs" class="btn btn-outline">API Docs</a>
+  </div>
+</body>
+</html>

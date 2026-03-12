@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    background: #0a0b0f;
+  }
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #111318;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #2c3039;
+    border-radius: 3px;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply rounded-2xl border border-white/[0.06] bg-surface-1/80 backdrop-blur-xl;
+  }
+  .regime-badge {
+    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider;
+  }
+  .pulse-dot {
+    @apply h-2 w-2 rounded-full;
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 currentColor; }
+  50% { opacity: 0.7; box-shadow: 0 0 8px 2px currentColor; }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.5s ease-out forwards;
+}

@@ -1,0 +1,61 @@
+version: "3.9"
+
+services:
+  # ── TimescaleDB ──────────────────────────────────────────────
+  timescaledb:
+    image: timescale/timescaledb:latest-pg16
+    container_name: macropulse-db
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: macropulse
+      POSTGRES_PASSWORD: macropulse
+      POSTGRES_DB: macropulse
+    volumes:
+      - timescale_data:/home/postgres/pgdata/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U macropulse"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── FastAPI + Scheduler ──────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: macropulse-api
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    env_file: .env
+    environment:
+      DB_HOST: timescaledb
+    depends_on:
+      timescaledb:
+        condition: service_healthy
+    volumes:
+      - ./models/artifacts:/app/models/artifacts:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  # ── Nginx reverse proxy (serves frontend + proxies API) ─────
+  nginx:
+    image: nginx:alpine
+    container_name: macropulse-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./frontend/dist:/usr/share/nginx/html:ro
+    depends_on:
+      - api
+
+volumes:
+  timescale_data:

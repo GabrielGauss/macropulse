@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MacroPulse — Know the Macro Regime Before the Market Does</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300..700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0a0b0f; --surface: #111318; --surface2: #1a1c23; --border: rgba(255,255,255,0.06);
+      --green: #00e5a0; --red: #ff4d6a; --amber: #ffb800; --blue: #3b82f6; --purple: #a78bfa;
+    }
+    body { font-family: 'DM Sans', system-ui, sans-serif; background: var(--bg); color: #fff; line-height: 1.6; overflow-x: hidden; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Noise overlay ── */
+    body::before {
+      content: ''; position: fixed; inset: 0; z-index: 9999; pointer-events: none;
+      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      background-size: 256px;
+    }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+    /* ── Nav ── */
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 20px 0; border-bottom: 1px solid var(--border); }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; letter-spacing: -0.5px; }
+    .logo-icon { width: 32px; height: 32px; border-radius: 8px; background: rgba(0,229,160,0.12); display: flex; align-items: center; justify-content: center; font-size: 16px; }
+    .nav-links { display: flex; gap: 32px; font-size: 14px; color: rgba(255,255,255,0.5); }
+    .nav-links a:hover { color: #fff; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 24px; border-radius: 10px; font-size: 14px; font-weight: 600; transition: all 0.2s; cursor: pointer; border: none; }
+    .btn-primary { background: var(--green); color: #000; }
+    .btn-primary:hover { box-shadow: 0 0 24px rgba(0,229,160,0.3); transform: translateY(-1px); }
+    .btn-ghost { background: transparent; border: 1px solid var(--border); color: #fff; }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.2); }
+
+    /* ── Hero ── */
+    .hero { padding: 100px 0 80px; text-align: center; position: relative; }
+    .hero::before {
+      content: ''; position: absolute; top: -200px; left: 50%; transform: translateX(-50%);
+      width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, rgba(0,229,160,0.08), transparent 70%);
+      pointer-events: none;
+    }
+    .hero-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 16px; border-radius: 100px; background: rgba(0,229,160,0.08); border: 1px solid rgba(0,229,160,0.15); font-size: 12px; color: var(--green); font-weight: 500; margin-bottom: 24px; }
+    .hero h1 { font-size: clamp(36px, 5vw, 64px); font-weight: 700; letter-spacing: -1.5px; line-height: 1.1; max-width: 800px; margin: 0 auto; }
+    .hero h1 span { background: linear-gradient(135deg, var(--green), var(--blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { font-size: 18px; color: rgba(255,255,255,0.5); max-width: 560px; margin: 24px auto 0; line-height: 1.7; }
+    .hero-actions { display: flex; gap: 12px; justify-content: center; margin-top: 40px; }
+
+    /* ── Terminal demo ── */
+    .terminal { max-width: 680px; margin: 60px auto 0; border-radius: 16px; overflow: hidden; border: 1px solid var(--border); background: var(--surface); }
+    .terminal-bar { display: flex; align-items: center; gap: 8px; padding: 12px 16px; background: var(--surface2); }
+    .terminal-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .terminal-body { padding: 24px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.8; }
+    .terminal-body .dim { color: rgba(255,255,255,0.3); }
+    .terminal-body .green { color: var(--green); }
+    .terminal-body .blue { color: var(--blue); }
+    .terminal-body .amber { color: var(--amber); }
+    .terminal-body .red { color: var(--red); }
+    .terminal-body .purple { color: var(--purple); }
+
+    /* ── Features ── */
+    .features { padding: 100px 0; }
+    .features h2 { text-align: center; font-size: 32px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 60px; }
+    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+    .feature-card { padding: 32px; border-radius: 16px; border: 1px solid var(--border); background: var(--surface); transition: border-color 0.3s, transform 0.3s; }
+    .feature-card:hover { border-color: rgba(255,255,255,0.12); transform: translateY(-2px); }
+    .feature-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 16px; }
+    .feature-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+    .feature-card p { font-size: 14px; color: rgba(255,255,255,0.45); line-height: 1.6; }
+
+    /* ── Pipeline ── */
+    .pipeline { padding: 80px 0; text-align: center; }
+    .pipeline h2 { font-size: 32px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 16px; }
+    .pipeline-sub { color: rgba(255,255,255,0.4); font-size: 16px; max-width: 500px; margin: 0 auto 48px; }
+    .pipeline-steps { display: flex; justify-content: center; flex-wrap: wrap; gap: 0; }
+    .pipeline-step { display: flex; align-items: center; gap: 0; }
+    .step-box { padding: 14px 20px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); font-size: 13px; font-weight: 500; white-space: nowrap; }
+    .step-arrow { padding: 0 8px; color: rgba(255,255,255,0.15); font-size: 18px; }
+
+    /* ── CTA ── */
+    .cta { padding: 80px 0 120px; text-align: center; }
+    .cta-box { padding: 64px; border-radius: 24px; background: linear-gradient(135deg, rgba(0,229,160,0.06), rgba(59,130,246,0.06)); border: 1px solid var(--border); }
+    .cta h2 { font-size: 28px; font-weight: 700; margin-bottom: 12px; }
+    .cta p { color: rgba(255,255,255,0.4); margin-bottom: 32px; }
+
+    footer { text-align: center; padding: 24px 0; border-top: 1px solid var(--border); font-size: 12px; color: rgba(255,255,255,0.2); }
+
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+    .float { animation: float 4s ease-in-out infinite; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Nav -->
+    <nav>
+      <div class="logo">
+        <div class="logo-icon">⚡</div>
+        MacroPulse
+      </div>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#pipeline">Pipeline</a>
+        <a href="/docs" target="_blank">API Docs</a>
+      </div>
+      <a href="/docs" class="btn btn-primary">Get Started</a>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-badge">🔬 Quantitative Macro Intelligence</div>
+      <h1>Know the <span>Macro Regime</span> Before the Market Does</h1>
+      <p>MacroPulse uses PCA and Hidden Markov Models to classify the current macroeconomic environment into probabilistic regimes — updated daily after market close.</p>
+      <div class="hero-actions">
+        <a href="/docs" class="btn btn-primary">Explore the API →</a>
+        <a href="#pipeline" class="btn btn-ghost">How It Works</a>
+      </div>
+
+      <!-- Terminal demo -->
+      <div class="terminal float">
+        <div class="terminal-bar">
+          <div class="terminal-dot" style="background:#ff5f57"></div>
+          <div class="terminal-dot" style="background:#febc2e"></div>
+          <div class="terminal-dot" style="background:#28c840"></div>
+        </div>
+        <div class="terminal-body">
+          <span class="dim">$ curl</span> /v1/regime/current<br>
+          {<br>
+          &nbsp;&nbsp;<span class="dim">"timestamp":</span> <span class="purple">"2026-03-11"</span>,<br>
+          &nbsp;&nbsp;<span class="dim">"macro_regime":</span> <span class="red">"tightening"</span>,<br>
+          &nbsp;&nbsp;<span class="dim">"risk_score":</span> <span class="amber">-34</span>,<br>
+          &nbsp;&nbsp;<span class="dim">"probabilities":</span> {<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="green">"expansion"</span>: 0.18,<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="red">"tightening"</span>: 0.54,<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="amber">"risk_off"</span>: 0.21,<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="blue">"recovery"</span>: 0.07<br>
+          &nbsp;&nbsp;}<br>
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features" id="features">
+      <h2>What MacroPulse Delivers</h2>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon" style="background:rgba(0,229,160,0.1);color:var(--green)">📊</div>
+          <h3>4-State Regime Classification</h3>
+          <p>Expansion, Tightening, Risk-Off, Recovery — each day the HMM produces probability distributions across all four regimes.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background:rgba(167,139,250,0.1);color:var(--purple)">💧</div>
+          <h3>Net Liquidity Proxy</h3>
+          <p>Fed balance sheet minus TGA minus Reverse Repo. The single most important variable for risk-asset direction, computed daily.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background:rgba(59,130,246,0.1);color:var(--blue)">🧠</div>
+          <h3>PCA Latent Factors</h3>
+          <p>Dimensionality reduction across macro and market features into 3-4 interpretable latent factors capturing ~80% of variance.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background:rgba(255,184,0,0.1);color:var(--amber)">⚡</div>
+          <h3>Real-Time WebSocket</h3>
+          <p>Stream regime updates the instant the daily pipeline completes. Build dashboards and trading systems that react in real time.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background:rgba(255,77,106,0.1);color:var(--red)">🔔</div>
+          <h3>Regime Change Alerts</h3>
+          <p>Email and webhook notifications when the macro regime transitions. Never miss a macro inflection point.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon" style="background:rgba(0,229,160,0.1);color:var(--green)">📈</div>
+          <h3>Model Drift Monitoring</h3>
+          <p>Continuous monitoring of PCA variance stability, regime persistence, and feature distribution shift with automated warnings.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pipeline -->
+    <section class="pipeline" id="pipeline">
+      <h2>The Pipeline</h2>
+      <p class="pipeline-sub">From raw FRED data to actionable regime signals in seconds.</p>
+      <div class="pipeline-steps">
+        <div class="pipeline-step">
+          <div class="step-box">FRED + Yahoo</div>
+          <div class="step-arrow">→</div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-box">Feature Engineering</div>
+          <div class="step-arrow">→</div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-box">PCA Factors</div>
+          <div class="step-arrow">→</div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-box">HMM Inference</div>
+          <div class="step-arrow">→</div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-box" style="border-color:rgba(0,229,160,0.3);color:var(--green)">Regime Signal</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+      <div class="cta-box">
+        <h2>Ready to integrate macro intelligence?</h2>
+        <p>Get started with the API or deploy the full stack with Docker.</p>
+        <div style="display:flex;gap:12px;justify-content:center;">
+          <a href="/docs" class="btn btn-primary">API Documentation</a>
+          <a href="https://github.com" class="btn btn-ghost">View on GitHub</a>
+        </div>
+      </div>
+    </section>
+
+    <footer>© 2026 MacroPulse · Macro Regime Intelligence</footer>
+  </div>
+</body>
+</html>

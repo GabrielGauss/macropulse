@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pricing — MacroPulse</title>
+  <meta name="description" content="MacroPulse API pricing. Free tier available. Starter $49/mo, Pro $199/mo." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg: #070b14; --bg2: #0d1424; --border: #1e2d45; --green: #00d97e; --green-dim: #00d97e22; --blue: #3b82f6; --text: #e2e8f0; --muted: #64748b; --card: #0f1929; }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; line-height: 1.6; }
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 1rem 2rem; border-bottom: 1px solid var(--border); }
+    .nav-logo { font-weight: 700; color: var(--text); text-decoration: none; } .nav-logo span { color: var(--green); }
+    .container { max-width: 960px; margin: 0 auto; padding: 5rem 2rem; text-align: center; }
+    .section-label { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.1em; color: var(--green); text-transform: uppercase; margin-bottom: 1rem; }
+    h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 1rem; }
+    .sub { color: var(--muted); max-width: 500px; margin: 0 auto 0.75rem; }
+    .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 3rem; text-align: left; }
+    .pricing-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; position: relative; }
+    .pricing-card.featured { border-color: var(--green); }
+    .featured-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--green); color: #000; font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.75rem; border-radius: 999px; }
+    .pricing-card h3 { font-size: 1rem; margin-bottom: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .price { font-size: 2.8rem; font-weight: 700; font-family: 'JetBrains Mono'; }
+    .price span { font-size: 1rem; font-weight: 400; color: var(--muted); }
+    .pricing-card ul { list-style: none; margin: 1.5rem 0; display: flex; flex-direction: column; gap: 0.65rem; }
+    .pricing-card li { font-size: 0.88rem; color: var(--muted); display: flex; align-items: center; gap: 0.6rem; }
+    .pricing-card li::before { content: '✓'; color: var(--green); font-weight: 700; flex-shrink: 0; }
+    .pricing-card li.no::before { content: '✗'; color: var(--muted); }
+    .pricing-card li.no { color: #334155; }
+    .pricing-btn { width: 100%; padding: 0.85rem; border-radius: 8px; font-weight: 600; font-size: 0.9rem; cursor: pointer; border: none; transition: opacity 0.2s; margin-top: 0.5rem; }
+    .pricing-btn.outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+    .pricing-btn.outline:hover { border-color: var(--muted); }
+    .pricing-btn.solid { background: var(--green); color: #000; }
+    .pricing-btn.solid:hover { opacity: 0.88; }
+    .pricing-btn.blue { background: var(--blue); color: #fff; }
+    .pricing-btn.blue:hover { opacity: 0.88; }
+    .guarantee { margin-top: 2rem; font-size: 0.82rem; color: var(--muted); }
+
+    /* Compare table */
+    .compare { margin-top: 4rem; text-align: left; }
+    .compare h2 { font-size: 1.5rem; margin-bottom: 1.5rem; text-align: center; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    th { background: var(--bg2); padding: 0.75rem 1rem; text-align: center; color: var(--muted); font-weight: 500; }
+    th:first-child { text-align: left; }
+    td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); text-align: center; color: var(--muted); }
+    td:first-child { text-align: left; color: var(--text); }
+    td.yes { color: var(--green); font-weight: 600; }
+    td.no { color: #334155; }
+    tr:hover td { background: var(--card); }
+
+    footer { border-top: 1px solid var(--border); padding: 2rem; text-align: center; }
+    footer p { color: var(--muted); font-size: 0.82rem; }
+    footer a { color: var(--muted); }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="/" class="nav-logo">Macro<span>Pulse</span></a>
+</nav>
+
+<div class="container">
+  <div class="section-label">Pricing</div>
+  <h1>Start free. Scale when you need to.</h1>
+  <p class="sub">No credit card required for the free tier. Upgrade instantly when you're ready to go live.</p>
+
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <h3>Free</h3>
+      <div class="price">$0<span> / mo</span></div>
+      <ul>
+        <li>50 API requests / day</li>
+        <li>Latest signal endpoint</li>
+        <li>30-day historical range</li>
+        <li>Live dashboard access</li>
+        <li class="no">Performance attribution</li>
+        <li class="no">5-day regime forecast</li>
+        <li class="no">WebSocket stream</li>
+        <li class="no">Full 2yr+ history</li>
+      </ul>
+      <button class="pricing-btn outline" onclick="window.location='/#get-key'">Get Free Key</button>
+    </div>
+
+    <div class="pricing-card featured">
+      <div class="featured-badge">Most Popular</div>
+      <h3>Starter</h3>
+      <div class="price">$49<span> / mo</span></div>
+      <ul>
+        <li>500 API requests / day</li>
+        <li>Full signal package</li>
+        <li>Full 2yr+ history</li>
+        <li>Performance attribution</li>
+        <li>5-day regime forecast</li>
+        <li>Live dashboard access</li>
+        <li class="no">WebSocket stream</li>
+        <li class="no">Priority support</li>
+      </ul>
+      <button class="pricing-btn solid" onclick="openCheckout('starter')">Subscribe →</button>
+    </div>
+
+    <div class="pricing-card">
+      <h3>Pro</h3>
+      <div class="price">$199<span> / mo</span></div>
+      <ul>
+        <li>Unlimited requests</li>
+        <li>Full signal package</li>
+        <li>Full 2yr+ history</li>
+        <li>Performance attribution</li>
+        <li>5-day regime forecast</li>
+        <li>Live dashboard access</li>
+        <li>WebSocket stream</li>
+        <li>Priority support</li>
+      </ul>
+      <button class="pricing-btn blue" onclick="openCheckout('pro')">Subscribe →</button>
+    </div>
+  </div>
+
+  <p class="guarantee">14-day money-back guarantee · Cancel anytime · Billed monthly · Prices in USD</p>
+
+  <!-- Comparison table -->
+  <div class="compare">
+    <h2>Full comparison</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Free</th>
+          <th>Starter</th>
+          <th>Pro</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Daily request limit</td><td>50</td><td>500</td><td>Unlimited</td></tr>
+        <tr><td>GET /v1/signals/latest</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+        <tr><td>GET /v1/signals/{date}</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+        <tr><td>GET /v1/signals/range</td><td>30 days</td><td class="yes">Full history</td><td class="yes">Full history</td></tr>
+        <tr><td>GET /v1/regime/current</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+        <tr><td>GET /v1/performance</td><td class="no">✗</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+        <tr><td>GET /v1/forecast/regime</td><td class="no">✗</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+        <tr><td>GET /v1/liquidity/history</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+        <tr><td>Live dashboard</td><td class="yes">✓</td><td class="yes">✓</td><td class="yes">✓</td></tr>
+        <tr><td>WebSocket stream</td><td class="no">✗</td><td class="no">✗</td><td class="yes">✓</td></tr>
+        <tr><td>Support</td><td>Community</td><td>Email</td><td>Priority email</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<footer><p>© 2025 MacroPulse · <a href="/terms.html">Terms</a> · <a href="/privacy.html">Privacy</a> · <a href="/refund.html">Refund Policy</a></p></footer>
+
+<script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
+<script>
+  const PADDLE_ENV = 'sandbox';
+  const PADDLE_CLIENT_TOKEN = 'PADDLE_CLIENT_TOKEN_PLACEHOLDER';
+  const PRICE_IDS = {
+    starter: 'PADDLE_STARTER_PRICE_ID_PLACEHOLDER',
+    pro:     'PADDLE_PRO_PRICE_ID_PLACEHOLDER',
+  };
+  if (PADDLE_ENV === 'sandbox') Paddle.Environment.set('sandbox');
+  Paddle.Initialize({ token: PADDLE_CLIENT_TOKEN });
+
+  function openCheckout(tier) {
+    Paddle.Checkout.open({
+      items: [{ priceId: PRICE_IDS[tier], quantity: 1 }],
+      customData: { tier },
+    });
+  }
+</script>
+</body>
+</html>

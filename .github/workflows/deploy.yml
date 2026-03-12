@@ -1,0 +1,32 @@
+name: Deploy to production
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host:     ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key:      ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            set -e
+            cd /opt/macropulse
+
+            # Pull latest code
+            git pull origin master
+
+            # Rebuild and restart only the API container
+            # (DB and nginx keep running — no downtime)
+            docker compose up -d --build --no-deps api
+
+            # Verify health
+            sleep 10
+            curl -sf http://localhost:8000/health || exit 1
+
+            echo "Deploy successful"

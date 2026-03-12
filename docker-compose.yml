@@ -1,35 +1,36 @@
 version: "3.9"
 
 services:
-  # ── TimescaleDB ──────────────────────────────────────────────
+  # ── TimescaleDB ──────────────────────────────────────────────────
   timescaledb:
     image: timescale/timescaledb:latest-pg16
     container_name: macropulse-db
     restart: unless-stopped
-    ports:
-      - "5432:5432"
+    expose:
+      - "5432"          # internal only — not exposed to host in production
     environment:
-      POSTGRES_USER: macropulse
-      POSTGRES_PASSWORD: macropulse
-      POSTGRES_DB: macropulse
+      POSTGRES_USER:     ${DB_USER:-macropulse}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-macropulse}
+      POSTGRES_DB:       ${DB_NAME:-macropulse}
     volumes:
       - timescale_data:/home/postgres/pgdata/data
-      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U macropulse"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-macropulse}"]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  # ── FastAPI + Scheduler ──────────────────────────────────────
+  # ── FastAPI + Scheduler ──────────────────────────────────────────
   api:
     build:
       context: .
       dockerfile: Dockerfile
+    image: macropulse-api:latest
     container_name: macropulse-api
     restart: unless-stopped
-    ports:
-      - "8000:8000"
+    expose:
+      - "8000"          # internal only — nginx handles external traffic
     env_file: .env
     environment:
       DB_HOST: timescaledb
@@ -37,25 +38,46 @@ services:
       timescaledb:
         condition: service_healthy
     volumes:
-      - ./models/artifacts:/app/models/artifacts:ro
+      - model_artifacts:/app/models/artifacts  # writable so retrain works
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 15s
       timeout: 5s
       retries: 3
+      start_period: 20s
 
-  # ── Nginx reverse proxy (serves frontend + proxies API) ─────
+  # ── Nginx (SSL termination + reverse proxy) ──────────────────────
   nginx:
     image: nginx:alpine
     container_name: macropulse-nginx
     restart: unless-stopped
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-      - ./frontend/dist:/usr/share/nginx/html:ro
+      - certbot_www:/var/www/certbot:ro
+      - certbot_conf:/etc/letsencrypt:ro
     depends_on:
       - api
 
+  # ── Certbot (Let's Encrypt cert renewal) ────────────────────────
+  certbot:
+    image: certbot/certbot
+    container_name: macropulse-certbot
+    volumes:
+      - certbot_www:/var/www/certbot
+      - certbot_conf:/etc/letsencrypt
+    # Renew certs daily (exits immediately if not due)
+    entrypoint: >
+      sh -c "trap exit TERM;
+             while :; do
+               certbot renew --webroot -w /var/www/certbot --quiet;
+               sleep 12h & wait $${!};
+             done"
+
 volumes:
   timescale_data:
+  model_artifacts:
+  certbot_www:
+  certbot_conf:

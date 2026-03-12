@@ -220,14 +220,14 @@ def create_user(email: str, name: str | None = None) -> dict[str, Any]:
 
 
 def get_user_by_email(email: str) -> dict[str, Any] | None:
-    sql = "SELECT id, email, name, created_at, stripe_customer_id FROM users WHERE email = %(email)s;"
+    sql = "SELECT id, email, name, created_at, paddle_customer_id, paddle_subscription_id FROM users WHERE email = %(email)s;"
     with get_sync_cursor() as cur:
         cur.execute(sql, {"email": email})
         return cur.fetchone()  # type: ignore[return-value]
 
 
 def get_user_by_id(user_id: int) -> dict[str, Any] | None:
-    sql = "SELECT id, email, name, created_at, stripe_customer_id FROM users WHERE id = %(id)s;"
+    sql = "SELECT id, email, name, created_at, paddle_customer_id, paddle_subscription_id FROM users WHERE id = %(id)s;"
     with get_sync_cursor() as cur:
         cur.execute(sql, {"id": user_id})
         return cur.fetchone()  # type: ignore[return-value]
